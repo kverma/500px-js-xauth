@@ -19,4 +19,4 @@ Be sure to include the correct API consumerKey and Consumer Secret in [keys.js] 
 
 Krish Verma
 
-twitter: [kverma] (https://twitter.com/kvrma)
+twitter: [kvrma] (https://twitter.com/kvrma)
