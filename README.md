@@ -13,3 +13,12 @@ Please refer to the class summary under the `docs` directory
 ## Usage
 
 TODO
+
+## License
+   See [License] (https://github.com/kverma/500px-js-xauth/blob/master/LICENSE.txt)
+
+## Author
+
+Krish Verma
+github: #kverma
+twitter: kvrma
