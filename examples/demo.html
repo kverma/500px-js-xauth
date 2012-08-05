@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+    <script type="text/javascript" charset="utf-8" src="../lib/sha1.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/oauth.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../XAuth.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../keys.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+    
+    
+    var requestToken      = null;
+    var requestSecret     = null;
+    var accessToken       = null;
+    var accessTokenSecret = null;
+        
+    function request_and_access(){
+        var params = {
+            consumerKey    : consumerKey,
+            consumerSecret : consumerSecret,
+            xauthRequestTokenUrl: "https://api.500px.com/v1/oauth/request_token",
+            userName       : document.getElementById("user_name").value,
+            password       : document.getElementById("password").value,
+            success : function(token,secret){
+                requestToken = token;
+                requestSecret = secret;
+                console.log("Succeeded In getting the Request Token.");
+                access(); // 
+            },
+            error : function(code, message){  //optional
+                console.log("Failed!"+ code + message);
+                document.getElementById("request").disabled = false;
+            }
+        };
+
+        document.getElementById("request").disabled = true;
+        XAuth.fetch_request_token(params);
+    }
+
+  function access(){
+        var params = {
+            xauthAccessTokenUrl: "https://api.500px.com/v1/oauth/access_token",
+            consumerKey    : consumerKey,
+            consumerSecret : consumerSecret,
+            requestToken   : requestToken,
+            requestSecret   : requestSecret,
+            userName       : document.getElementById("user_name").value,
+            password       : document.getElementById("password").value,
+            success : function(token,secret){
+                accessToken = token;
+                accessTokenSecret = secret;
+                document.getElementById("exec_signedcall").disabled = false;
+                document.getElementById("payload").disabled = false;
+                console.log("Succeeded. Please input your tweet.")
+            },
+            error : function(code, message){  //optional
+                console.log("Failed!"+ code + message);
+            }
+        };
+
+        document.getElementById("exec_signedcall").disabled = true;
+        XAuth.fetch_access_token(params);
+    }
+
+    function callapi(){
+        var params = {
+            consumerKey       : consumerKey,
+            consumerSecret    : consumerSecret,
+            accessToken       : accessToken,
+            accessTokenSecret : accessTokenSecret
+        };
+        var apiParams = {
+            action: "https://api.500px.com/v1/photos/4928401?comments" ,
+            method: "GET", 
+            payload : {'payload': document.getElementById("payload").value},
+            success : function() {
+                console.log("Succeeded!");
+            },
+            error : function(code, message) {  //optional
+                console.log("Failed!");
+            }
+        }
+        
+        var xauthApi = new XAuth(params);
+        xauthApi.signedcall(apiParams);
+    
+    }
+    
+    </script>
+  </head>
+  <body>
+  	  <h1>XAuth 500px sample</h1>
+        <div>
+            500px username<br />
+            <input id="user_name" type="text" />
+        </div>
+        <div>
+            500px account password<br />
+            <input id="password" type="password" />
+        </div>
+        <div>
+            Api Payload<br />
+            <textarea id="payload" disabled></textarea>
+        </div>
+        <input id="request" type="button" onClick="request_and_access()" value="Request & Get AccessToken"/>
+        <input id="exec_signedcall" type="button" onClick="callapi()" value="Call API" disabled/>
+  </body>
+</html>
