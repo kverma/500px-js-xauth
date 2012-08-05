@@ -20,5 +20,5 @@ TODO
 ## Author
 
 Krish Verma
-github: #kverma
+github: @kverma
 twitter: kvrma
